@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Cancer Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+
+        h1 {
+            margin-top: 20px;
+            color: #ff9800;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            padding: 20px;
+            background-color: #333333;
+            border-radius: 10px;
+        }
+
+        label {
+            margin: 10px 0;
+            color: #ff9800;
+        }
+
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ff9800;
+            background-color: #555555;
+            color: #ffffff;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ff9800;
+            color: #1e1e1e;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff5722;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #333333;
+            border-radius: 5px;
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <h1>Breast Cancer Prediction</h1>
+    <form id="prediction-form">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required>
+        
+        <label for="tumor-size">Tumor Size (cm):</label>
+        <input type="number" id="tumor-size" name="tumor_size" step="0.1" required>
+        
+        <label for="lymph-nodes">Lymph Nodes Affected:</label>
+        <input type="number" id="lymph-nodes" name="lymph_nodes" required>
+        
+        <label for="histological-grade">Histological Grade (1-3):</label>
+        <input type="number" id="histological-grade" name="histological_grade" min="1" max="3" required>
+        
+        <label for="er-status">ER Status (1: Positive, 0: Negative):</label>
+        <input type="number" id="er-status" name="er_status" min="0" max="1" required>
+        
+        <label for="pr-status">PR Status (1: Positive, 0: Negative):</label>
+        <input type="number" id="pr-status" name="pr_status" min="0" max="1" required>
+        
+        <label for="her2-status">HER2 Status (1: Positive, 0: Negative):</label>
+        <input type="number" id="her2-status" name="her2_status" min="0" max="1" required>
+        
+        <label for="ki67-index">Ki-67 Index (%):</label>
+        <input type="number" id="ki67-index" name="ki67_index" required>
+        
+        <label for="p53-status">P53 Status (1: Mutated, 0: Normal):</label>
+        <input type="number" id="p53-status" name="p53_status" min="0" max="1" required>
+        
+        <button type="submit">Predict</button>
+    </form>
+    
+    <div id="result"></div>
+
+    <footer>
+        <p>Project made by: Ashis Pattanaik, 2105779@kiit.ac.in, KIIT UNIVERSITY</p>
+        <p>Safe Ranges for Reference:</p>
+        <ul>
+            <li>Age: No specific safe range; risk increases with age.</li>
+            <li>Tumor Size: &lt; 2 cm is generally safer.</li>
+            <li>Lymph Nodes: No lymph nodes affected (N0) is safer.</li>
+            <li>Histological Grade: Low-grade (Grade 1) is safer.</li>
+            <li>ER/PR Status: Positive is safer.</li>
+            <li>HER2 Status: Negative is safer.</li>
+            <li>Ki-67 Index: &lt; 10% is safer.</li>
+            <li>P53 Status: Normal P53 expression is safer.</li>
+        </ul>
+        <p>For further reading, see the research paper <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10585150">here</a>.</p>
+    </footer>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = `Prediction: ${result.prediction}% possibility of breast cancer.`;
+        });
+    </script>
+</body>
+</html>
